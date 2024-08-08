@@ -14,7 +14,7 @@ exports.handler = async (event, context) => {
 
   // TODO: リクエストボディの中身をJavaScriptオブジェクトに変換し、1つ、あるいは複数の変数に代入する
   const request_body = event.body ? JSON.parse(event.body) : null;
-  if (!request_body || !request_body.userId || !request_body.nickname || !request_body.age) {
+  if (!request_body || !request_body.userId) {
     response.statusCode = 400;
     response.body = JSON.stringify({
       message: "無効なリクエストです。request bodyが適切ではありません"
@@ -36,8 +36,6 @@ exports.handler = async (event, context) => {
     // TODO: 登録に成功した場合の処理を記載する。(status codeの設定と、response bodyの設定)
     response.body = JSON.stringify({
       userId: request_body.userId,
-      nickname: request_body.nickname,
-      age: request_body.age
     });
   } catch (e) {
     console.error(e);
