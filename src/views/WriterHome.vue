@@ -47,7 +47,7 @@
           
           <div class="right-align">
             <button
-              class="ui green button"
+              class="ui teal button"
               v-bind:disabled="isPostButtonDisabled"
               type="submit"
             >
@@ -57,24 +57,25 @@
         </form>
       </div>
       
-      
-      
-
-      <h4>あなたの投稿</h4>
-      <div style="text-align: right;">
-          <form class="ui right aligned form">
-            <div class="ui mini input">
-                <select v-model="filter.search">
-                  <option disable value="">並び替え</option>
-                  <option v-for="option in searchOptions" :key="option.value" :value="option.value">
-                    {{ option.text }}
-                  </option>
-                </select>
-            </div>
-          </form>
-      </div>
       <div class="ui segment">
       <!--投稿一覧-->
+        <div style="display: flex; margin-bottom: 20px;">
+            <div style="">
+              <h3>あなたの投稿</h3>
+            </div>
+            <div style="margin-left: auto">
+              <form class="ui right aligned form">
+                <div class="ui mini input">
+                    <select v-model="filter.search">
+                      <option disable value="">並び替え</option>
+                      <option v-for="option in searchOptions" :key="option.value" :value="option.value">
+                        {{ option.text }}
+                      </option>
+                    </select>
+                </div>
+              </form>
+            </div>
+          </div>
         <ul class="ui one column grid">
           <template v-for="(item, index) in filteredArticles" :key="index">
             <Article :id="index" :article="item" :writerMode="true" />

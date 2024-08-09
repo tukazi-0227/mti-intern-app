@@ -1,10 +1,14 @@
 <template>
-  <div class="ui secondary pointing green inverted massive menu">
+  <div class="ui secondary pointing teal inverted massive menu">
     <div class="left menu">
-      <div class="item">MediQal now</div>
+      <img class="ui image" style="margin-left: 20px; width: 50px;" src="@/assets/logo.svg" alt="app logo" />
+      <h2 class="ui header item">MediQal now</h2>
     </div>
-    <div class="right menu">
-      <a @click="to_company" class="item">企業の方へ</a>
+    <div class="right menu middle">
+      <button class="ui standard inverted button" style="margin: 10px 20px;" @click="to_company">
+        <i class="building icon"></i>
+        企業の方はこちら
+      </button>
     </div>
   </div>
   <div>
@@ -33,23 +37,26 @@
           </div>
         </form>
       </div>
-      <div class="left floated left aligned six wide column">
-      <h4>投稿一覧</h4>
-      </div>
-        <div style="text-align: right;">
-          <form class="ui right aligned form">
-            <div class="ui mini input">
-                <select v-model="filter.search">
-                  <option disable value="">並び替え</option>
-                  <option v-for="option in searchOptions" :key="option.value" :value="option.value">
-                    {{ option.text }}
-                  </option>
-                </select>
-            </div>
-          </form>
-        </div>
       <div class="ui segment">
       <!--投稿一覧-->
+        <div style="display: flex; margin-bottom: 20px;">
+          <div style="">
+            <h3>投稿一覧</h3>
+          </div>
+          <div style="margin-left: auto">
+            <form class="ui right aligned form">
+              <div class="ui mini input">
+                  <select v-model="filter.search">
+                    <option disable value="">並び替え</option>
+                    <option v-for="option in searchOptions" :key="option.value" :value="option.value">
+                      {{ option.text }}
+                    </option>
+                  </select>
+              </div>
+            </form>
+          </div>
+        </div>
+      
         <ul class="ui one column grid">
           <template v-for="(item, index) in filteredArticles" :key="index">
             <Article :id="index" :article="item" />

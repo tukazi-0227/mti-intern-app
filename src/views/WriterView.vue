@@ -27,9 +27,25 @@
         </form>
       </div>
       
-      <h4>投稿一覧</h4>
       <div class="ui segment">
       <!--投稿一覧-->
+        <div style="display: flex; margin-bottom: 20px;">
+          <div style="">
+            <h3>投稿一覧</h3>
+          </div>
+          <div style="margin-left: auto">
+            <form class="ui right aligned form">
+              <div class="ui mini input">
+                  <select v-model="filter.search">
+                    <option disable value="">並び替え</option>
+                    <option v-for="option in searchOptions" :key="option.value" :value="option.value">
+                      {{ option.text }}
+                    </option>
+                  </select>
+              </div>
+            </form>
+          </div>
+        </div>
         <ul class="ui one column grid">
           <template v-for="(item, index) in filteredArticles" :key="index">
             <Article :id="index" :article="item" />
@@ -70,6 +86,7 @@ export default {
       filter: {
         symptoms: '',
         category: '',
+        search: '',
       },
       articles: [],
       options: [
@@ -89,6 +106,11 @@ export default {
         { value: '睡眠', text: '睡眠' },
         { value: '即効性', text: '即効性' },
         { value: '予防', text: '予防' }
+      ],
+      searchOptions: [
+        { value: '新しい順', text: '新しい順' },
+        { value: '古い順', text: '古い順' },
+        { value: '人気順', text: '人気順' },
       ],
       
       iam: null,

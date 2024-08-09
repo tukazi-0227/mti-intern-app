@@ -20,7 +20,7 @@
             </div>
           </div>
           
-          <button class="ui huge green fluid button" type="submit" :disabled="disabledButton">
+          <button class="ui huge teal fluid button" type="submit" :disabled="disabledButton">
             更新
           </button>
         </form>

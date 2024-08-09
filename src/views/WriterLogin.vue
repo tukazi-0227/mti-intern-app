@@ -1,16 +1,17 @@
 <template>
   <div>
-    <div class="ui secondary pointing green inverted massive menu">
-      <div class="left menu">
-        <div class="item">MediQal now</div>
-      </div>
-      <div class="right menu">
-        <a @click="to_home" class="item">記事一覧へ戻る</a>
-      </div>
+    <div class="ui secondary pointing teal inverted massive menu">
+    <div class="left menu">
+      <img class="ui image" style="margin-left: 20px; width: 50px;" src="@/assets/logo.svg" alt="app logo" />
+      <h2 class="ui header item">MediQal now</h2>
     </div>
-    <div class="ui container center aligned">
-      <p >企業の方は以下からログインしてください</p>
+    <div class="right menu middle">
+      <button class="ui standard inverted button" style="margin: 10px 20px;" @click="to_home">
+        <i class="clipboard icon"></i>
+        記事一覧へ戻る
+      </button>
     </div>
+  </div>
     <div class="ui main container">
       <!-- 基本的なコンテンツはここに記載する -->
       <div class="ui segment">
@@ -37,7 +38,7 @@
             </div>
           </div>
           
-          <button class="ui huge green fluid button" type="submit" :disabled="disableButton">
+          <button class="ui huge teal fluid button" type="submit" :disabled="disableButton">
             {{submitText}}
           </button>
         </form>

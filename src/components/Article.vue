@@ -7,22 +7,37 @@
           {{ article.title }}
         </h3>
         <div>
-          <span class="ui small green label">{{ article.category }}</span>
-          <span class="ui small green label">{{ article.symptoms }}</span>
+          <span class="ui small teal label">{{ article.category }}</span>
+          <span class="ui small teal label">{{ article.symptoms }}</span>
         </div>
         <span class="meta">{{ article.userId }}</span>
-        <!-- テキストの一部表示 -->
-        <p v-if="article.text?.length > 50 && !article.showFullText">
-          {{ article.text.slice(0, 50) }}...
-          <a href="#" @click.prevent="article.showFullText = true">続きを読む</a>
-        </p>
-        <!-- 全文表示 -->
-        <p v-else style="white-space:pre-wrap;">
-          {{ article.text }}
-          <a href="#" v-if="article.text.length > 50" @click.prevent="article.showFullText = false">閉じる</a>
-        </p>
+        <!-- テキストと商品リンクを横並びに配置 -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="flex: 1;">
+            <!-- テキストの一部表示 -->
+            <p v-if="article.text?.length > 300 && !article.showFullText">
+              {{ article.text.slice(0, 300) }}...
+              <a href="#" @click.prevent="article.showFullText = true">続きを読む</a>
+            </p>
+            <!-- 全文表示 -->
+            <p v-else style="white-space:pre-wrap;">
+              {{ article.text }}
+              <a href="#" v-if="article.text.length > 300" @click.prevent="article.showFullText = false">閉じる</a>
+            </p>
+          </div>
         
-          <a v-if="article.url" :href="article.url" target="_blank">商品はこちら</a>
+        <div style="flex-shrink: 0; margin-left: 20px; text-align: right;">
+          <!-- 商品リンクとサムネイル画像 -->
+          <a v-if="article.url" :href="article.url" target="_blank">
+            <img :src="generateThumbnailUrl(article.url)" :alt="article.title" width="250" height="130" />
+            <div style="text-align: center;">
+            <button class="ui teal button" style="width: 200px; margin-top: 10px; margin-bottom: 10px;">
+              商品はこちら
+            </button>
+            </div>
+          </a>
+        </div>
+      </div>
 
         <div v-if="writerMode" >
           <div>
@@ -33,8 +48,9 @@
           </button>
         </div>
         
+        
         <button v-else class="ui right floated icon button" @click="onLikeEvent" :disabled="isLoading">
-          <i class="heart icon"></i> {{ article.like }}
+          <i :class="['heart icon', { 'red': isLiked }]"></i> {{ article.like }}
         </button>
       
       </div>
@@ -79,6 +95,11 @@ export default {
   },
   methods: {
     // Vue.jsで使う関数はここで記述する
+    generateThumbnailUrl(url) {
+      // Heart Rails CaptureのURLを生成
+      return `https://capture.heartrails.com/120x90/cool/${Date.now()}?${url}`;
+    },
+    
     formatDate (timestamp) {
       const date = new Date(timestamp);
       const date_minutes = String(date.getMinutes()).length == 1 ? `0${date.getMinutes()}` : date.getMinutes()
