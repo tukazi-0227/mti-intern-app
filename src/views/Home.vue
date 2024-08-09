@@ -167,7 +167,6 @@ export default {
       }));
       
       // 並び替えオプションに応じたソートを実施
-      this.sortArticles();
     } catch (e) {
       console.error(e);
       alert(`記事一覧取得時にエラーが発生しました: ${e}`);
