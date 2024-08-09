@@ -86,34 +86,41 @@ export default {
     },
     
     async onLikeEvent() {
-      if (this.isLiked){
-        this.article.like--;
+      if(localStorage.getItem(`${this.article.timestamp}_${this.article.userId}`) && !this.isLiked){
+        alert('同じ記事に2回以上いいねはできません');
       } else {
-        this.article.like++;
-      };
-      
-      try {
-        this.isLoading = true;
-        const res = await fetch(baseUrl + "/article", {
-          method: "PUT",
-          body: JSON.stringify(this.article)
-        });
-  
-        const text = await res.text();
-        const jsonData = text ? JSON.parse(text) : {};
-  
-        // fetchではネットワークエラー以外のエラーはthrowされないため、明示的にthrowする
-        if (!res.ok) {
-          const errorMessage =
-            jsonData.message ?? "エラーメッセージがありません";
-          throw new Error(errorMessage);
-        }
+        if (this.isLiked){
+          this.article.like--;
+          localStorage.removeItem(`${this.article.timestamp}_${this.article.userId}`)
+
+        } else {
+          this.article.like++;
+          localStorage.setItem(`${this.article.timestamp}_${this.article.userId}`, true)
+        };
         
-        this.isLiked = !this.isLiked;
-      } catch(e) {
-        alert(`通信に失敗しました - ${e.message}`)
-      } finally {
-        this.isLoading = false;
+        try {
+          this.isLoading = true;
+          const res = await fetch(baseUrl + "/article", {
+            method: "PUT",
+            body: JSON.stringify(this.article)
+          });
+    
+          const text = await res.text();
+          const jsonData = text ? JSON.parse(text) : {};
+    
+          // fetchではネットワークエラー以外のエラーはthrowされないため、明示的にthrowする
+          if (!res.ok) {
+            const errorMessage =
+              jsonData.message ?? "エラーメッセージがありません";
+            throw new Error(errorMessage);
+          }
+          
+          this.isLiked = !this.isLiked;
+        } catch(e) {
+          alert(`通信に失敗しました - ${e.message}`)
+        } finally {
+          this.isLoading = false;
+        }
       }
     },
     
