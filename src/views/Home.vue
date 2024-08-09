@@ -1,7 +1,7 @@
 <template>
   <div class="ui secondary pointing teal inverted massive menu">
     <div class="left menu">
-      <img class="ui image" style="margin-left: 20px; width: 50px;" src="@/assets/logo.svg" alt="app logo" />
+      <!--<img class="ui image" style="margin-left: 20px; width: 50px;" src="logo.svg" alt="app logo" />-->
       <h2 class="ui header item">MediQal now</h2>
     </div>
     <div class="right menu middle">
