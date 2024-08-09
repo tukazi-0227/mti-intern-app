@@ -1,10 +1,13 @@
 <template>
   <div class="ui secondary pointing green inverted massive menu">
-    <router-link active-class="active" class="item" exact to="/">Home</router-link>
-    <router-link active-class="active" class="item" to="/user">User</router-link>
-    <router-link active-class="active" class="item" to="/profile">Profile</router-link>
+    <div class="left menu">
+      <div class="item">MediQal now</div>
+    </div>
+    <router-link active-class="active" class="item" to="/writer-profile">プロフィール</router-link>
+    <router-link active-class="active" class="item" to="/writer-home">投稿</router-link>
+    <router-link active-class="active" class="item" to="/writer-view">閲覧</router-link>
     <div class="right menu">
-      <a @click="logout" class="item">Logout</a>
+      <a @click="logout" class="item">ログアウト</a>
     </div>
   </div>
 </template>
@@ -28,11 +31,11 @@ export default {
   },
   methods: {
     // Vue.jsで使う関数はここで記述する
-    logout () {
+    logout() {
       window.localStorage.clear();
-      this.$router.push({name: 'Login'})
-    }
-  },
+      this.$router.push({ name: "Home" });
+    },
+  },    
 }
 </script>
 

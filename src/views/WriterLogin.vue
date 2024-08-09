@@ -1,5 +1,16 @@
 <template>
   <div>
+    <div class="ui secondary pointing green inverted massive menu">
+      <div class="left menu">
+        <div class="item">MediQal now</div>
+      </div>
+      <div class="right menu">
+        <a @click="to_home" class="item">記事一覧へ戻る</a>
+      </div>
+    </div>
+    <div class="ui container center aligned">
+      <p >企業の方は以下からログインしてください</p>
+    </div>
     <div class="ui main container">
       <!-- 基本的なコンテンツはここに記載する -->
       <div class="ui segment">
@@ -8,38 +19,31 @@
           <div class="field">
             <div  class="ui left icon input">
               <i class="user icon"></i>
-              <input v-model="userdata.userId" type="text" placeholder="ID" />
+              <input v-model="userdata.userId" type="text" placeholder="会社名" />
             </div>
           </div>
           
           <div class="field">
             <div  class="ui left icon input">
               <i class="lock icon"></i>
-              <input v-model="userdata.password" type="password" placeholder="password" />
+              <input v-model="userdata.password" :type="toggleInputType" placeholder="パスワード" />
             </div>
           </div>
           
           <div class="field" v-if="!isLogin">
             <div  class="ui left icon input">
-              <i class="tag icon"></i>
-              <input v-model="userdata.nickname" type="text" placeholder="NichName" />
-            </div>
-          </div>
-          
-          <div class="field" v-if="!isLogin">
-            <div  class="ui left icon input">
-              <i class="calendar icon"></i>
-              <input v-model.number="userdata.age" type="text" placeholder="Age" />
+              <i class="lock icon"></i>
+              <input v-model="secondary_password" :type="toggleInputType" placeholder="パスワード(再入力)" />
             </div>
           </div>
           
           <button class="ui huge green fluid button" type="submit" :disabled="disableButton">
-            {{ submitText }}
+            {{submitText}}
           </button>
         </form>
       </div>
-      <button class="ui huge gray fluid button" type="submit" @click="toggleMode()">
-        {{ toggleText }}
+      <button @click="toggle_mode()" class="ui huge gray fluid button">
+        {{toggleText}}
       </button>
   
     </div>
@@ -56,7 +60,7 @@ import { baseUrl } from '@/assets/config.js'
 import Loader from '@/components/Loader.vue'
 
 export default {
-  name: 'Login',
+  name: 'WriterLogin',
 
   components: {
     // 読み込んだコンポーネント名をここに記述する
@@ -68,10 +72,9 @@ export default {
     return {
       userdata: {
         userId: null,
-        password: null,
-        nickname: null,
-        age: null
+        password: null
       },
+      secondary_password: null,
       isLogin: true,
     };
   },
@@ -84,23 +87,26 @@ export default {
     toggleText() {
       return this.isLogin ? '新規登録' : 'ログイン'
     },
+    toggleInputType() {
+      return this.isLogin ? "password": "text"
+    },
     disableButton() {
       return this.isLogin ? 
         !Boolean(this.userdata.userId && this.userdata.password) : 
-        !Boolean(this.userdata.userId && this.userdata.password && this.userdata.nickname && this.userdata.age);
+        !Boolean(this.userdata.userId && this.userdata.password && this.userdata.password == this.secondary_password);
     }
   },
-
+  
   methods: {
     // Vue.jsで使う関数はここで記述する
-    toggleMode () {
-      this.isLogin = !this.isLogin
+    toggle_mode() {
+      this.isLogin = !this.isLogin;
     },
-    
+    to_home () {
+      this.$router.push({name: 'Home'})
+    },
     async submit() {
       if(this.isLogin) {
-        console.log('login')
-        
         const requestBody = {
           userId: this.userdata.userId,
           password: this.userdata.password,
@@ -114,14 +120,13 @@ export default {
           
           const text = await response.text();
           const jsonData = text ? JSON.parse(text) : {};
-          console.log(jsonData);
-          
+
           if(!response.ok) {
             throw new Error(jsonData.message ?? 'エラーメッセージなし')
           } else {
             window.localStorage.setItem('token', jsonData.token);
             window.localStorage.setItem('userId', this.userdata.userId)
-            this.$router.push({name: 'Home'})
+            this.$router.push({name: 'WriterHome'})
           }
           
         } catch(e) {
@@ -131,8 +136,6 @@ export default {
 
         
       } else {
-        console.log('signup')
-        
         const header = {
           Authorization: "mtiToken"
         };
@@ -140,8 +143,6 @@ export default {
         const requestBody = {
           userId: this.userdata.userId,
           password: this.userdata.password,
-          nickname: this.userdata.nickname,
-          age: this.userdata.age
         }
         
         try {
@@ -153,14 +154,13 @@ export default {
           
           const text = await response.text();
           const jsonData = text ? JSON.parse(text) : {};
-          console.log(jsonData);
-          
+
           if(!response.ok) {
             throw new Error(jsonData.message ?? 'エラーメッセージなし')
           } else {
             window.localStorage.setItem('token', jsonData.token);
             window.localStorage.setItem('userId', this.userdata.userId)
-            this.$router.push({name: 'Home'})
+            this.$router.push({name: 'WriterHome'})
           }
           
         } catch(e) {

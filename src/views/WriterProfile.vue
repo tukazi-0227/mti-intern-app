@@ -9,28 +9,14 @@
           <div class="field">
             <div  class="ui left icon input">
               <i class="user icon"></i>
-              <input v-model="userdata.userId" type="text" placeholder="ID" required disabled />
+              <input v-model="userdata.userId" type="text" placeholder="会社名" required disabled />
             </div>
           </div>
           
           <div class="field">
             <div  class="ui left icon input">
               <i class="lock icon"></i>
-              <input v-model="userdata.password" type="password" placeholder="password" />
-            </div>
-          </div>
-          
-          <div class="field">
-            <div  class="ui left icon input">
-              <i class="tag icon"></i>
-              <input v-model="userdata.nickname" type="text" placeholder="NichName" />
-            </div>
-          </div>
-          
-          <div class="field">
-            <div  class="ui left icon input">
-              <i class="calendar icon"></i>
-              <input v-model.number="userdata.age" type="text" placeholder="Age" />
+              <input v-model="userdata.password" type="password" placeholder="パスワード" />
             </div>
           </div>
           
@@ -55,7 +41,7 @@ import { baseUrl } from '@/assets/config.js'
 import Menu from '@/components/Menu.vue'
 
 export default {
-  name: 'Profile',
+  name: 'WiterProfile',
 
   components: {
     // 読み込んだコンポーネント名をここに記述する
@@ -67,9 +53,7 @@ export default {
     return {
       userdata: {
         userId: window.localStorage.getItem('userId'),
-        password: null,
-        nickname: null,
-        age: null
+        password: null
       },
     }
   },
@@ -77,40 +61,38 @@ export default {
   computed: {
     // 計算した結果を変数として利用したいときはここに記述する
     disabledButton () {
-      return !Boolean(this.userdata.password && this.userdata.nickname && this.userdata.age)
+      return !Boolean(this.userdata.password)
     }
   },
   
   created: async function() {
     if(!window.localStorage.getItem('token')){
-      this.$router.push({ name: 'Login' })
+      this.$router.push({ name: 'Home' })
     }
     
     const header = {
       Authorization: "mtiToken"
     };
     
-    try {
-      const response = await fetch(`${baseUrl}/user?userId=${this.userdata.userId}`, {
-        method: 'GET',
-        header
-      })
-      
-      const text = await response.text();
-      const jsonData = text ? JSON.parse(text) : {};
-      console.log(jsonData);
-      
-      if(!response.ok) {
-        throw new Error(jsonData.message ?? 'エラーメッセージなし')
-      }
-      
-      this.userdata.nickname = jsonData.nickname;
-      this.userdata.age = jsonData.age;
-      
-    } catch(e) {
-      console.error(e);
-      alert(`エラーが発生しました。\n${e.message}`);
-    }
+    // [!] ユーザ情報がpassword以外をもつなら必要
+    //try {
+    //  const response = await fetch(`${baseUrl}/user?userId=${this.userdata.userId}`, {
+    //    method: 'GET',
+    //    header
+    //  })
+    //  
+    //  const text = await response.text();
+    //  const jsonData = text ? JSON.parse(text) : {};
+    //  console.log(jsonData);
+    //  
+    //  if(!response.ok) {
+    //    throw new Error(jsonData.message ?? 'エラーメッセージなし')
+    //  }
+    //  
+    //} catch(e) {
+    //  console.error(e);
+    //  alert(`エラーが発生しました。\n${e.message}`);
+    //}
   },
   
   methods: {
@@ -131,8 +113,7 @@ export default {
         
         const text = await response.text();
         const jsonData = text ? JSON.parse(text) : {};
-        console.log(jsonData);
-        
+
         if(!response.ok) {
           throw new Error(jsonData.message ?? 'エラーメッセージなし')
         } else {
@@ -146,7 +127,6 @@ export default {
     },
     
     async deleteUser() {
-
       const header = {
         Authorization: "mtiToken"
       };
@@ -159,12 +139,11 @@ export default {
         
         const text = await response.text();
         const jsonData = text ? JSON.parse(text) : {};
-        console.log(jsonData);
-        
+
         if(!response.ok) {
           throw new Error(jsonData.message ?? 'エラーメッセージなし')
         } else {
-          this.$router.push({ name: 'Login' });
+          this.$router.push({ name: 'WriterLogin' });
         }
         
       } catch(e) {
