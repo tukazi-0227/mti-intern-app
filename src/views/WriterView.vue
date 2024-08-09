@@ -1,16 +1,5 @@
 <template>
-  <div class="ui secondary pointing teal inverted massive menu">
-    <div class="left menu">
-      <!--<img class="ui image" style="margin-left: 20px; width: 50px;" src="logo.svg" alt="app logo" />-->
-      <h2 class="ui header item">MediQal now</h2>
-    </div>
-    <div class="right menu middle">
-      <button class="ui standard inverted button" style="margin: 10px 20px;" @click="to_company">
-        <i class="building icon"></i>
-        企業の方はこちら
-      </button>
-    </div>
-  </div>
+  <Menu />
   <div>
     <div class="ui main container">
       
@@ -37,6 +26,7 @@
           </div>
         </form>
       </div>
+      
       <div class="ui segment">
       <!--投稿一覧-->
         <div style="display: flex; margin-bottom: 20px;">
@@ -56,13 +46,13 @@
             </form>
           </div>
         </div>
-      
         <ul class="ui one column grid">
           <template v-for="(item, index) in filteredArticles" :key="index">
             <Article :id="index" :article="item" />
           </template>
         </ul>
       </div>
+      
     </div>
   </div>
 </template>
@@ -72,22 +62,27 @@
 // @は/srcと同じ意味です
 // import something from '@/components/something.vue';
 import { baseUrl } from '@/assets/config.js';
-import Article from '@/components/Article.vue';
+import Menu from '@/components/Menu.vue'
+import Article from '@/components/Article.vue'
 
 // const headers = {'Authorization' : 'mtiToken'};
 
 
 export default {
-  name: 'Home',
+  name: 'WriterView',
 
   components: {
+    Menu,
     Article
-    // 読み込んだコンポーネント名をここに記述する
   },
 
   data() {
     // Vue.jsで使う変数はここに記述する
     return {
+      post: {
+        text: null,
+        category: null,
+      },
       filter: {
         symptoms: '',
         category: '',
@@ -117,6 +112,8 @@ export default {
         { value: '古い順', text: '古い順' },
         { value: '人気順', text: '人気順' },
       ],
+      
+      iam: null,
     };
   },
   
@@ -124,7 +121,6 @@ export default {
     disableSearch() {
       return !Boolean(this.filter.category || this.filter.symptoms)
     },
-    
     filteredArticles() {
       let result = this.articles;
       
@@ -134,7 +130,6 @@ export default {
       if (this.filter.symptoms != "") {
         result = result.filter(article => article.symptoms == this.filter.symptoms);
       }
-      
       
       if (this.filter.search === '新しい順') {
         this.articles.sort((a, b) => b.timestamp - a.timestamp);
@@ -165,15 +160,13 @@ export default {
           jsonData.message ?? "エラーメッセージがありません";
         throw new Error(errorMessage);
       }
-      
 
       // [!] 記事がなかった場合undefinedとなり、記事追加時のunshiftでエラーとなるため、空のarrayを代入
+      // this.articles = jsonData.articles ?? [];
       this.articles = jsonData.users.map(article => ({
         ...article,
-        like: parseInt(article.like)
-      }));
-      
-      // 並び替えオプションに応じたソートを実施
+        likeCount: parseInt(article.like)
+      })) ;
     } catch (e) {
       console.error(e);
       alert(`記事一覧取得時にエラーが発生しました: ${e}`);
@@ -184,7 +177,7 @@ export default {
     to_company () {
       this.$router.push({name: 'WriterLogin'})
     },
-  },
+  }
 }
 </script>
 
